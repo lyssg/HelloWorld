@@ -12,6 +12,8 @@ public class SocketMessageType {
     public static final int MSG_DEVICE_REQUEST_EHTFILE1=202;//上传chip ，stype，htype
     public static final int MSG_DEVICE_REQUEST_EHTFILE2=203;
 
+    public static final int MSG_DEVICE_DOWNLOAD_EHTFILE=204;
+
     public static final int MSG_DEVICE_UPLOAD2=9;
     public static final int MSG_DEVICE_UPLOAD3=10;
     public static final int MSG_DEVICE_UPLOAD4=11;

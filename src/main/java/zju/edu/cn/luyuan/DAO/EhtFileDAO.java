@@ -181,29 +181,21 @@ public class EhtFileDAO {
         return beans;
     }
 
-    public List<EhtFile> listByType(int start, int count,int type) {
+    public List<EhtFile> listByChip(int chip) {
         List<EhtFile> beans = new ArrayList<EhtFile>();
-
-        String sql = "select * from ehtfile where type="+type+" limit ?,? ";
-
+        String sql = "select * from ehtfile where chip="+chip;
         try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql);) {
-
-            ps.setInt(1, start);
-            ps.setInt(2, count);
-
             ResultSet rs = ps.executeQuery();
-
             while (rs.next()) {
                 EhtFile bean = new EhtFile();
                 int id = rs.getInt(1);
-                int chip = rs.getInt("chip");
                 String stype=rs.getString("stype");
                 int sversion = rs.getInt("sversion");
                 String sdate=rs.getString("sdate");
                 String htype=rs.getString("htype");
                 String remarks=rs.getString("remarks");
                 String note = rs.getString("note");
-                long date = rs.getLong("bdate");
+                long date = rs.getLong("date");
                 bean.setChip(chip);
                 bean.setStype(stype);
                 bean.setSversion(sversion);
@@ -213,29 +205,61 @@ public class EhtFileDAO {
                 bean.setNote(note);
                 bean.setDate(date);
                 bean.setId(id);
-
                 beans.add(bean);
             }
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
         return beans;
     }
 
-    public boolean checkVersionExist(int type,int version) {
-        try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement();) {
-            String sql = "select * from ehtfile where type=" + type+" and version="+version;
-            ResultSet rs = s.executeQuery(sql);
-
-            if (rs.next()) {
-                return true;
+    public List<EhtFile> listByChipStypeHtype(int chip,String stype,String htype) {
+        List<EhtFile> beans = new ArrayList<EhtFile>();
+        String sql = "select * from ehtfile where chip=? and stype=? and htype=?";
+        try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql);) {
+            ps.setInt(1, chip);
+            ps.setString(2, stype);
+            ps.setString(3, htype);
+            ResultSet rs = ps.executeQuery();
+            System.out.println("sql:"+sql);
+            while (rs.next()) {
+                EhtFile bean = new EhtFile();
+                int id = rs.getInt(1);
+                int sversion = rs.getInt("sversion");
+                String sdate=rs.getString("sdate");
+                String remarks=rs.getString("remarks");
+                String note = rs.getString("note");
+                long date = rs.getLong("date");
+                bean.setChip(chip);
+                bean.setStype(stype);
+                bean.setSversion(sversion);
+                bean.setSdate(sdate);
+                bean.setHtype(htype);
+                bean.setRemarks(remarks);
+                bean.setNote(note);
+                bean.setDate(date);
+                bean.setId(id);
+                beans.add(bean);
             }
-            return false;
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
-        return true;
+        return beans;
     }
+
+//    public boolean checkVersionExist(int type,int version) {
+//        try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement();) {
+//            String sql = "select * from ehtfile where type=" + type+" and version="+version;
+//            ResultSet rs = s.executeQuery(sql);
+//
+//            if (rs.next()) {
+//                return true;
+//            }
+//            return false;
+//        } catch (SQLException e) {
+//
+//            e.printStackTrace();
+//        }
+//        return true;
+//    }
 }
